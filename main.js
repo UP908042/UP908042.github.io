@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("stateAlert").style.visibility = "hidden";
     createTiles();
     let guessedWords = [[]];
     let availableSpace = 1;
@@ -44,16 +45,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function handleSubmitWord() {
         const currentWordArr = getCurrentWordArr();
+        const firstLetterID = guessedWordCount * 5 + 1;
+        const interval = 200;
         if (currentWordArr.length !== 5) {
-            window.alert("Word Must Be 5 Letters");
+            startTile = (guessedWords.length - 1) * 5 + 1
+            for (let i=startTile;i < startTile + 5;i++) {
+                const letterTile = document.getElementById(i);
+                letterTile.classList.add("animate__shakeX");
+                setTimeout(() => { letterTile.classList.remove("animate__shakeX"); }, 700);      
+            }
+            
+
+            popUpAnim('word must be five letters long', false);
+            
+
+            console.log(startTile);
+            //window.alert("Word Must Be 5 Letters");
             return;
         }
 
+
+
         const currentWord = currentWordArr.join('');
 
-
-        const firstLetterID = guessedWordCount * 5 + 1;
-        const interval = 200;
+        
+        
         currentWordArr.forEach((letter, index) => {
             setTimeout(() => {
             const tileColor = getTileColor(letter, index);
@@ -67,16 +83,39 @@ document.addEventListener("DOMContentLoaded", () => {
         guessedWordCount += 1;
 
         if (currentWord === word) {
-            window.alert("Correct");
+            //window.alert("Correct");
+            popUpAnim('You Won!', true);
             document.removeEventListener("keydown");
         }
 
         if(guessedWords.length === 6) {
-            window.alert('sorry you lost');
+            //window.alert('sorry you lost');
+            popUpAnim('You Lost!', true);
             document.removeEventListener("keydown");
         }
 
         guessedWords.push([]);
+    }
+
+    function popUpAnim(text, hasWonLost) {
+        const alertBox = document.getElementById("stateAlert");
+            
+        alertBox.style.visibility = "visible";
+        
+        alertBox.textContent = text;
+        alertBox.classList.add("animate__bounceIn");
+        if (!hasWonLost) {
+        setTimeout(() => {
+            alertBox.classList.remove("animate__bounceIn");
+            alertBox.classList.add("animate__bounceOut");
+            setTimeout(() => {
+                alertBox.classList.remove("animate__bounceOut");
+                
+                alertBox.style.visibility = "hidden";
+            }, 500);
+            
+        }, 1000);
+    }
     }
 
     // Creates the tile
