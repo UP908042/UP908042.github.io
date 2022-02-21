@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     createTiles();
     let guessedWords = [[]];
     let availableSpace = 1;
-    let word = 'doggy';
+    let word = 'groom';
     let guessedWordCount = 0;
     // Letter Input
 
