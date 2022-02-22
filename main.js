@@ -1,13 +1,26 @@
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("stateAlert").style.visibility = "hidden";
+    
+    let word = 'pikachu';
+    getImg();
     createTiles();
     let guessedWords = [[]];
     let availableSpace = 1;
-    let word = 'groom';
+    
+    console.log(word.length);
     let guessedWordCount = 0;
     // Letter Input
 
 
+
+    function getImg(){
+        imgDiv = document.getElementById("pokeimg");
+        pokeImg = document.createElement("img");
+        pokeImg.setAttribute("id", "imgfile");
+        pokeImg.src = 'https://i.pinimg.com/originals/95/d5/cd/95d5cded00f3a3e8a98fb1eed568aa9f.png';
+
+        imgDiv.appendChild(pokeImg);
+    }
 
     function getCurrentWordArr() {
         const numGuessedWords = guessedWords.length;
@@ -16,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateGuessedWords(letter) {
         const currentWordArr = getCurrentWordArr();
-        if (currentWordArr && currentWordArr.length < 5) {
+        if (currentWordArr && currentWordArr.length < word.length) {
             currentWordArr.push(letter);
 
             const availableSpaceTile = document.getElementById(availableSpace);
@@ -30,33 +43,33 @@ document.addEventListener("DOMContentLoaded", () => {
         const isCorrectLetter = word.includes(letter);
 
         if (!isCorrectLetter) {
-            return "rgb(58, 58, 60)";
+            return "rgba(255, 255, 255, 0.8)";
         }
 
         const letterInPos = word.charAt(index)
         const isCorrectPos = (letter === letterInPos);
 
         if (isCorrectPos) {
-            return  "rgb(83, 141, 78)";
+            return  "rgba(83, 141, 78, 0.8)";
         }
 
-        return "rgb(181, 159, 59)";
+        return "rgba(181, 159, 59, 0.8)";
     }
 
     function handleSubmitWord() {
         const currentWordArr = getCurrentWordArr();
-        const firstLetterID = guessedWordCount * 5 + 1;
+        const firstLetterID = guessedWordCount * word.length + 1;
         const interval = 200;
-        if (currentWordArr.length !== 5) {
-            startTile = (guessedWords.length - 1) * 5 + 1
-            for (let i=startTile;i < startTile + 5;i++) {
+        if (currentWordArr.length !== word.length) {
+            startTile = (guessedWords.length - 1) * word.length + 1
+            for (let i=startTile;i < startTile + word.length;i++) {
                 const letterTile = document.getElementById(i);
                 letterTile.classList.add("animate__shakeX");
                 setTimeout(() => { letterTile.classList.remove("animate__shakeX"); }, 700);      
             }
             
 
-            popUpAnim('word must be five letters long', false);
+            popUpAnim(`word must be ${word.length} letters long`, false);
             
 
             console.log(startTile);
@@ -121,8 +134,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Creates the tile
     function createTiles() {
         const gameBoard = document.getElementById("board");
-
-        for (let i=0;i<30;i++) {
+        gameBoard.setAttribute("style", `grid-template-columns: repeat(${word.length}, 1fr);`);
+        for (let i=0;i<word.length * 6;i++) {
             let tile = document.createElement("div");
             tile.classList.add("tile");
             tile.classList.add("animate__animated");
@@ -157,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (key === 'Backspace'){
-            if (availableSpace > (guessedWords.length - 1) * 5 + 1){
+            if (availableSpace > (guessedWords.length - 1) * word.length + 1){
             handleDeleteLetter();
             //return;
             //}
